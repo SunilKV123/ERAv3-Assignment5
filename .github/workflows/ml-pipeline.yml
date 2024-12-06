@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install torch torchvision pytest
+        pip install torch torchvision pytest tqdm
         
     - name: Train model
       run: |
@@ -32,4 +32,4 @@ jobs:
       with:
         name: trained-model
         path: models/
-        retention-days: 90  # Optional: specify how long to keep the artifact
+        retention-days: 90
