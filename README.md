@@ -1,4 +1,4 @@
-[![ML Pipeline](https://github.com/SunilKV123/ERAv3-Assignment5/actions/workflows/ml_pipeline.yml/badge.svg)](https://github.com/SunilKV123/ERAv3-Assignment5/actions/workflows/ml_pipeline.yml)    
+[![ML Pipeline](https://github.com/SunilKV123/ERAv3-Assignment5/actions/workflows/ml-pipeline.yml/badge.svg)](https://github.com/SunilKV123/ERAv3-Assignment5/actions/workflows/ml-pipeline.yml)
 # MNIST CNN Model with CI/CD Pipeline
 
 This project implements a CNN model for MNIST digit classification with a complete CI/CD pipeline.
