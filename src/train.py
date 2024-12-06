@@ -28,21 +28,46 @@ def train():
     
     # Training
     model.train()
+    correct = 0
+    total = 0
+    running_loss = 0.0
+    
     pbar = tqdm(train_loader, desc='Training')
     for batch_idx, (data, target) in enumerate(pbar):
         data, target = data.to(device), target.to(device)
+        
+        # Forward pass
         optimizer.zero_grad()
         output = model(data)
         loss = criterion(output, target)
+        
+        # Backward pass
         loss.backward()
         optimizer.step()
         
-        # Update progress bar with loss info
-        pbar.set_postfix({'loss': f'{loss.item():.4f}'})
+        # Calculate accuracy
+        _, predicted = torch.max(output.data, 1)
+        total += target.size(0)
+        correct += (predicted == target).sum().item()
+        running_loss += loss.item()
+        
+        # Calculate current accuracy and average loss
+        current_accuracy = 100 * correct / total
+        avg_loss = running_loss / (batch_idx + 1)
+        
+        # Update progress bar with loss and accuracy info
+        pbar.set_postfix({
+            'loss': f'{avg_loss:.4f}',
+            'accuracy': f'{current_accuracy:.2f}%'
+        })
     
-    # Save model with timestamp
+    final_accuracy = 100 * correct / total
+    print(f'\nFinal Training Accuracy: {final_accuracy:.2f}%')
+    
+    # Save model with timestamp and accuracy
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    save_path = f'models/mnist_model_{timestamp}.pth'
+    accuracy_str = f"{final_accuracy:.2f}".replace(".", "p")
+    save_path = f'models/mnist_model_{timestamp}_acc{accuracy_str}.pth'
     os.makedirs('models', exist_ok=True)
     torch.save(model.state_dict(), save_path)
     return save_path
