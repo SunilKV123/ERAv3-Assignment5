@@ -5,10 +5,12 @@ from torchvision import datasets, transforms
 from model import MNISTModel
 from datetime import datetime
 import os
+from tqdm import tqdm
 
 def train():
     # Set device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(f"Using device: {device}")
     
     # Data loading
     transform = transforms.Compose([
@@ -26,7 +28,8 @@ def train():
     
     # Training
     model.train()
-    for batch_idx, (data, target) in enumerate(train_loader):
+    pbar = tqdm(train_loader, desc='Training')
+    for batch_idx, (data, target) in enumerate(pbar):
         data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
         output = model(data)
@@ -34,6 +37,9 @@ def train():
         loss.backward()
         optimizer.step()
         
+        # Update progress bar with loss info
+        pbar.set_postfix({'loss': f'{loss.item():.4f}'})
+    
     # Save model with timestamp
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     save_path = f'models/mnist_model_{timestamp}.pth'
